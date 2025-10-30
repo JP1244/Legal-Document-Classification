@@ -65,7 +65,7 @@ You can access it in two ways — via Hugging Face or Google Drive.
 #### Import and load the SCOTUS dataset (LexGLUE subset)
 from datasets import load_dataset
 
-##### Load the dataset
+#### Load the dataset
 dataset = load_dataset("coastalcph/lex_glue", "scotus")
 
 #### View structure
