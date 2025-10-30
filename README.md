@@ -59,16 +59,16 @@ You can access it in two ways — via Hugging Face or Google Drive.
 
 ###  Option 1 — Load Dataset Directly from Hugging Face
 
-# Install required library
+#### Install required library
 !pip install datasets -q
 
-# Import and load the SCOTUS dataset (LexGLUE subset)
+#### Import and load the SCOTUS dataset (LexGLUE subset)
 from datasets import load_dataset
 
-# Load the dataset
+##### Load the dataset
 dataset = load_dataset("coastalcph/lex_glue", "scotus")
 
-# View structure
+#### View structure
 print(dataset)
 print(dataset["train"][0])
 
