@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sulekh Gujarati Font Converter</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="stylesheet" href="static/upload.css">
+</head>
+<body>
+
+        <header class="header">
+        <a href="/" class="header-logo">SulekhSutra</a>
+
+        <div class="header-toggle">
+            <i class="bx bx-menu" id="header-toggle"></i>
+        </div>
+
+        <nav class="nav" id="nav-menu">
+            <div class="nav-content bd-grid">
+                <a href="/" class="nav-perfil">
+                    <div class="nav-img">
+                        <img src="static/images/sulekh_logo_1.png" alt="logo">
+                    </div>
+
+                    <div>
+                        <span class="nav-name">SulekhSutra</span>
+                    </div>
+                </a>
+
+                <div class="nav-menu">
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="/upload" class="nav-link active">Upload</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link ">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <h1 class="main-heading">Your file has been converted!</h1>
+    <a class="btn-download" href="{{ url_for('download_file', filename=filename) }}">Download Converted File</a>
+
+</body>
+</html>

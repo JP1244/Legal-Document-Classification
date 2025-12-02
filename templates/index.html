@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sulekh Gujarati Font Converter</title>
+  <link rel="stylesheet" href="static/style.css">
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+</head>
+
+<body>
+
+      <header class="header">
+        <a href="#" class="header-logo">Clay</a>
+
+        <div class="header-toggle">
+            <i class="bx bx-menu" id="header-toggle"></i>
+        </div>
+
+        <nav class="nav" id="nav-menu">
+            <div class="nav-content bd-grid">
+                <a href="/" class="nav-perfil">
+                    <div class="nav-img">
+                        <img src="static/images/sulekh_logo_1.png" alt="logo">
+                    </div>
+
+                    <div>
+                        <span class="nav-name">SulekhSutra</span>
+                    </div>
+                </a>
+
+                <div class="nav-menu">
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="/" class="nav-link active">Home</a></li>
+                        <li class="nav-item"><a href="/upload" class="nav-link ">Upload</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link ">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="heading">
+      <h1 class="main-heading">Gujarati Sulekh Font Converter</h1>
+    </div>
+  
+  <div class="converter-container">
+    <p class="subtitle">Convert Gujarati text between Unicode and Sulekh fonts</p>
+
+    <div class="controls">
+      <select id="fromFont">
+        <option value="sulekh">Sulekh</option>
+        <option value="unicode">Unicode</option>
+      </select>
+      <span>⇄</span>
+      <select id="toFont">
+        <option value="unicode">Unicode</option>
+        <option value="sulekh">Sulekh</option>
+      </select>
+    </div>
+
+    <div class="textareas">
+      <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+      <textarea id="output-text" placeholder="Converted text will appear here..." readonly></textarea>
+    </div>
+
+    <button onclick="convertText()">Convert</button>
+  </div>
+
+  <script src="static/script.js"></script>
+</body>
+
+</html>

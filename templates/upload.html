@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Legal Document Classifier</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="stylesheet" href="static/upload.css">
+
+</head>
+
+<body>
+
+<header class="header">
+    <a href="#" class="header-logo">LexClassify</a>
+    <div class="nav-content" style="display:flex;align-items:center;gap:12px">
+        <div class="nav-img"><img src="static/images/sulekh_logo_1.png" alt="logo"></div>
+        <div style="color:var(--muted)">Legal Document Classifier</div>
+    </div>
+</header>
+
+<h1 class="main-heading">Upload Legal Document</h1>
+
+<!-- UPLOAD / SINGLE RESULT BLOCK -->
+<div class="upload-container" id="upload-block">
+  <p class="subtitle">Upload a legal PDF document or ZIP of multiple PDFs</p>
+  
+  <input type="file" id="fileInput" accept=".pdf, .zip" />
+  
+  <button onclick="uploadToBackend()">Classify Document</button>
+
+  <p id="file-name"></p>
+
+  <!-- Single PDF result -->
+  <div id="result-box" style="display:none;">
+      <h3>Detected Legal Domain:</h3>
+      <p id="domain-result" class="result-text"></p>
+  </div>
+</div>
+
+<!-- BULK RESULT / SEPARATE SECTION (below the form on same page) -->
+<div id="bulk-table-container" aria-live="polite">
+    <h3>Classification Results (Bulk)</h3>
+    <div class="table-wrap" role="region" aria-label="Bulk classification results">
+      <table id="result-table" aria-describedby="file-name">
+          <thead>
+              <tr>
+                  <th style="width:55%;">File Name</th>
+                  <th style="width:45%;">Predicted Legal Domain</th>
+              </tr>
+          </thead>
+          <tbody></tbody>
+      </table>
+    </div>
+</div>
+
+<script>
+async function uploadToBackend() {
+    const fileInput = document.getElementById("fileInput");
+    const resultBox = document.getElementById("result-box");
+    const bulkTableContainer = document.getElementById("bulk-table-container");
+    const resultText = document.getElementById("domain-result");
+
+    // initial hide
+    resultBox.style.display = "none";
+    bulkTableContainer.style.display = "none";
+
+    if (!fileInput.files.length) {
+        alert("Please select a PDF or ZIP file.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const filename = file.name.toLowerCase();
+
+    if (!filename.endsWith(".pdf") && !filename.endsWith(".zip")) {
+        alert("Only PDF or ZIP files are allowed.");
+        return;
+    }
+
+    document.getElementById("file-name").textContent = "Uploading… Please wait.";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    let response, result;
+    try {
+      response = await fetch("/upload", {
+          method: "POST",
+          body: formData
+      });
+      // handle non-json or network error
+      result = await response.json();
+    } catch (err) {
+      alert("Upload failed. Please check your network or backend. Error: " + (err.message || err));
+      document.getElementById("file-name").textContent = "";
+      return;
+    }
+
+    if (result.error) {
+        alert(result.error);
+        document.getElementById("file-name").textContent = "";
+        return;
+    }
+
+    document.getElementById("file-name").textContent = "Selected File: " + file.name;
+
+    // ------------------------------------------
+    // SINGLE PDF RESULT
+    // ------------------------------------------
+    if (result.mode === "single") {
+        // show single result in the upload block's result-box
+        resultBox.style.display = "block";
+        resultText.textContent = result.category || "Unknown";
+        // scroll result into view smoothly
+        resultBox.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    // ------------------------------------------
+    // BULK ZIP RESULT — SHOW TABLE (in separate section below)
+    // ------------------------------------------
+    if (result.mode === "bulk") {
+        const tbody = document.querySelector("#result-table tbody");
+        tbody.innerHTML = ""; // Clear old entries
+
+        // Expecting result.results = { "file1.pdf": "Contract", "file2.pdf": "Patent", ... }
+        const entries = Object.entries(result.results || {});
+        if (entries.length === 0) {
+            // no results returned
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.setAttribute('colspan', '2');
+            cell.textContent = "No files found in the ZIP or classification returned empty results.";
+            cell.style.padding = "14px";
+            row.appendChild(cell);
+            tbody.appendChild(row);
+        } else {
+            for (const [pdfName, domain] of entries) {
+                const row = document.createElement("tr");
+
+                const cell1 = document.createElement("td");
+                cell1.textContent = pdfName;
+                cell1.className = "file-name-cell";
+
+                const cell2 = document.createElement("td");
+                cell2.textContent = domain;
+                cell2.className = "domain-cell";
+
+                row.appendChild(cell1);
+                row.appendChild(cell2);
+
+                tbody.appendChild(row);
+            }
+        }
+
+        bulkTableContainer.style.display = "block";
+        // scroll to the bulk section so user sees results
+        bulkTableContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+}
+</script>
+
+</body>
+</html>
